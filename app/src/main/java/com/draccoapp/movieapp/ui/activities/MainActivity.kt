@@ -11,9 +11,11 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.navigation.ui.setupWithNavController
 import com.draccoapp.movieapp.R
 import com.draccoapp.movieapp.databinding.ActivityMainBinding
+import com.draccoapp.movieapp.viewModel.movies.MovieViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 
