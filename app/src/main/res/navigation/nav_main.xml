@@ -30,21 +30,12 @@
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
-        android:id="@+id/topMovieFragment"
-        android:name="com.draccoapp.movieapp.ui.fragments.TopMovieFragment"
-        android:label="fragment_top_movie"
-        tools:layout="@layout/fragment_top_movie" >
-        <argument
-            android:name="movie"
-            app:argType="com.draccoapp.movieapp.api.model.response.movies.Result" />
-    </fragment>
-    <fragment
         android:id="@+id/defaultViewPagerFragment"
         android:name="com.draccoapp.movieapp.ui.fragments.DefaultViewPagerFragment"
         android:label="DefaultViewPagerFragment" >
         <argument
-            android:name="result"
-            app:argType="com.draccoapp.movieapp.api.model.response.movies.Result" />
+            android:name="movie"
+            app:argType="com.draccoapp.movieapp.api.model.response.movies.Movie" />
     </fragment>
     <fragment
         android:id="@+id/movieDetailFragment"

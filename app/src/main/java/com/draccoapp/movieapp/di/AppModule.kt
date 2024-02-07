@@ -1,12 +1,13 @@
 package com.draccoapp.movieapp.di
 
+import com.draccoapp.movieapp.utils.MovieAppApplication
 import com.draccoapp.movieapp.viewModel.movies.MovieViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module{
     viewModel{
-        MovieViewModel()
+        MovieViewModel(MovieAppApplication())
     }
 }
 val repositoryModule = module{

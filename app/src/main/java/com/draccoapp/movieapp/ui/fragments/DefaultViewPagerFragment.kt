@@ -9,8 +9,9 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import coil.load
+import coil.request.CachePolicy
 import com.draccoapp.movieapp.R
-import com.draccoapp.movieapp.api.model.response.movies.Result
+import com.draccoapp.movieapp.api.model.response.movies.Movie
 import com.draccoapp.movieapp.databinding.FragmentDefaultViewPagerBinding
 import com.draccoapp.movieapp.utils.Constants
 import com.draccoapp.movieapp.viewModel.movies.MovieViewModel
@@ -26,11 +27,11 @@ class DefaultViewPagerFragment : Fragment() {
     private val args: DefaultViewPagerFragmentArgs by navArgs()
 
     companion object {
-        fun newInstance(items: Result?): DefaultViewPagerFragment {
+        fun newInstance(items: Movie?): DefaultViewPagerFragment {
             val fragment = DefaultViewPagerFragment()
 
             val args = Bundle().apply {
-                putParcelable("result", items)
+                putParcelable("movie", items)
             }
 
             fragment.arguments = args
@@ -53,9 +54,12 @@ class DefaultViewPagerFragment : Fragment() {
     }
 
     private fun setupUI() {
-        val movie = args.result
+        val movie = args.movie
         Log.e("TAG", "bind: ${Constants.POSTER_URL_VIEW + movie.posterPath}" )
-        binding.imagePoster.load(Constants.POSTER_URL_VIEW + movie.posterPath)
+        binding.imagePoster.load(Constants.POSTER_URL_VIEW + movie.posterPath) {
+            diskCachePolicy(CachePolicy.ENABLED)
+            error(R.drawable.ic_image_not)
+        }
 
         binding.imagePoster.setOnClickListener {
             viewModel.onMovieSelected(movie)

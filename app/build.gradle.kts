@@ -62,6 +62,10 @@ dependencies {
     implementation(libs.lifecycleRuntime)
     implementation(libs.kotlinxCoroutines)
 
+    implementation(libs.roomRuntime)
+    implementation(libs.roomKtx)
+    ksp(libs.roomCompilerKsp)
+
 //    implementation(libs.processingKsp)
 //    ksp(libs.processorKsp)
 

@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.draccoapp.movieapp.R
 import com.draccoapp.movieapp.api.model.request.MovieRequest
 import com.draccoapp.movieapp.api.model.response.categories.Genre
-import com.draccoapp.movieapp.api.model.response.movies.Result
 import com.draccoapp.movieapp.api.model.type.MovieType
 import com.draccoapp.movieapp.databinding.FragmentHomeBinding
 import com.draccoapp.movieapp.extensions.showSnackBarRed
@@ -95,11 +94,15 @@ class HomeFragment : Fragment() {
         }
 
         viewModel.moviesPlaying.observe(viewLifecycleOwner){
-            playingAdapter.updateList(it.results)
+            it?.let {
+                playingAdapter.updateList(it)
+            }
         }
 
         viewModel.moviesPopular.observe(viewLifecycleOwner){
-            popularAdapter.updateList(it.results)
+            it?.let {
+                popularAdapter.updateList(it)
+            }
         }
 
         viewModel.moviesTop.observe(viewLifecycleOwner){
@@ -111,8 +114,9 @@ class HomeFragment : Fragment() {
             }
 
             TabLayoutMediator(binding.tabLayoutList, binding.viewPagerList){ _, _-> }.attach()
-
-            topAdapter.setItems(it.results.subList(0,5))
+            it?.let {
+                topAdapter.setItems(it.subList(0,5))
+            }
 
 
         }

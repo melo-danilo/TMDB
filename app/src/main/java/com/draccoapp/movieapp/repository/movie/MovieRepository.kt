@@ -1,7 +1,9 @@
 package com.draccoapp.movieapp.repository.movie
 
+import android.util.Log
 import com.draccoapp.movieapp.api.model.request.MovieRequest
 import com.draccoapp.movieapp.api.model.response.categories.CategoriesResponse
+import com.draccoapp.movieapp.api.model.response.movies.Movie
 import com.draccoapp.movieapp.api.model.response.movies.MovieResponse
 import com.draccoapp.movieapp.api.request.ApiRequest
 import com.draccoapp.movieapp.api.service.movie.MovieService

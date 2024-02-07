@@ -1,6 +1,7 @@
 package com.draccoapp.movieapp.api.service.movie
 
 import com.draccoapp.movieapp.api.model.response.categories.CategoriesResponse
+import com.draccoapp.movieapp.api.model.response.movies.Movie
 import com.draccoapp.movieapp.api.model.response.movies.MovieResponse
 import retrofit2.Response
 import retrofit2.http.GET

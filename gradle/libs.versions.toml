@@ -23,6 +23,7 @@ moshiKotlin = "1.15.0"
 paging = "3.2.1"
 kspVersion = "1.9.0-1.0.13"
 kotlinPlugin = "1.8.10"
+roomVersion = "2.4.1"
 processorKspVersion = "1.6.0"
 #circleIndicator = "2.1.6"
 #imageCarousel = "2.0.6"
@@ -52,10 +53,14 @@ moshiKotlinKsp = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", 
 pagingRuntimeKtx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
 pagingCommonKtx = { group = "androidx.paging", name = "paging-common-ktx", version.ref = "paging" }
 retrofitConverterMoshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
+roomCompilerKsp = { group = "androidx.room", name = "room-compiler", version.ref = "roomVersion" }
+roomKtx = { group = "androidx.room", name = "room-ktx", version.ref = "roomVersion" }
+roomRuntime = { group = "androidx.room", name = "room-runtime", version.ref = "roomVersion" }
 #processorKsp = { group = "com.google.devtools.ksp", name = "symbol-processor", version.ref = "kspVersion" }
 #processingKsp = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "kspVersion" }
 #circleIndicator = { group = "me.relex", name = "circleindicator", version = "circleIndicator" }
 #imageCarousel = { group = "org.imaginativeworld.whynotimagecarousel", name = "whynotimagecarousel", version = "imageCarousel" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

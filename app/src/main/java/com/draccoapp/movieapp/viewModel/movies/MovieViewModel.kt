@@ -1,21 +1,25 @@
 package com.draccoapp.movieapp.viewModel.movies
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.draccoapp.movieapp.api.model.event.Event
 import com.draccoapp.movieapp.api.model.request.MovieRequest
 import com.draccoapp.movieapp.api.model.response.categories.CategoriesResponse
-import com.draccoapp.movieapp.api.model.response.movies.MovieResponse
-import com.draccoapp.movieapp.api.model.response.movies.Result
+import com.draccoapp.movieapp.api.model.response.movies.Movie
 import com.draccoapp.movieapp.api.model.type.DataState
 import com.draccoapp.movieapp.api.model.type.MovieType
+import com.draccoapp.movieapp.database.MovieDataBase
 import com.draccoapp.movieapp.repository.movie.MovieRepository
 import kotlinx.coroutines.launch
 
-class MovieViewModel:  ViewModel() {
+class MovieViewModel(application: Application):  AndroidViewModel(application) {
+
+    private val resultDataBase = MovieDataBase.getDatabase(application)
+    private val movieDao = resultDataBase.movieDao(resultDataBase)
 
     private val movieRepository = MovieRepository()
 
@@ -29,26 +33,26 @@ class MovieViewModel:  ViewModel() {
 
     private val _appState = MutableLiveData<DataState>()
 
-    val moviesPlaying: LiveData<MovieResponse>
+    val moviesPlaying: LiveData<List<Movie>?>
         get() = _moviesPlaying
 
-    private val _moviesPlaying = MutableLiveData<MovieResponse>()
+    private val _moviesPlaying = MutableLiveData<List<Movie>?>()
 
-    val moviesPopular: LiveData<MovieResponse>
+    val moviesPopular: LiveData<List<Movie>?>
         get() = _moviesPopular
 
-    private val _moviesPopular = MutableLiveData<MovieResponse>()
+    private val _moviesPopular = MutableLiveData<List<Movie>?>()
 
-    val moviesTop: LiveData<MovieResponse>
+    val moviesTop: LiveData<List<Movie>?>
         get() = _moviesTop
 
-    private val _moviesTop = MutableLiveData<MovieResponse>()
+    private val _moviesTop = MutableLiveData<List<Movie>?>()
 
 
-    val moviesDetail: LiveData<Result>
+    val moviesDetail: LiveData<Movie>
         get() = _moviesDetail
 
-    private val _moviesDetail = MutableLiveData<Result>()
+    private val _moviesDetail = MutableLiveData<Movie>()
 
     val categories: LiveData<CategoriesResponse>
         get() = _categories
@@ -89,19 +93,17 @@ class MovieViewModel:  ViewModel() {
         _appState.postValue(DataState.Loading)
 
         viewModelScope.launch {
-            val result = movieRepository.getMoviesPlaying(post)
 
+            val result = movieRepository.getMoviesPlaying(post)
+            Log.e("TAG", "getMoviesPlaying: $result" )
             result.fold(
                 onSuccess = {
-                    _moviesPlaying.value = it
+                    it?.let { response -> persistMovieData(response.results)  }
+                    _moviesPlaying.value = it?.results
                     _appState.value = DataState.Success
                 },
                 onFailure = {
-                    it.message?.let { e ->
-                        Log.e("Error", e)
-                        _error.value = e
-                    }
-                    _appState.value = DataState.Error
+                    errorHandle(it.message.toString(), MovieType.PLAYING)
                 }
             )
         }
@@ -112,18 +114,15 @@ class MovieViewModel:  ViewModel() {
 
         viewModelScope.launch {
             val result = movieRepository.getMoviesPopular(post)
-
+            Log.e("TAG", "getMoviesPopular: $result")
             result.fold(
                 onSuccess = {
-                    _moviesPopular.value = it
+//                    it?.let { response -> persistMovieData(response.results)  }
+                    _moviesPopular.value = it?.results
                     _appState.value = DataState.Success
                 },
                 onFailure = {
-                    it.message?.let { e ->
-                        Log.e("Error", e)
-                        _error.value = e
-                    }
-                    _appState.value = DataState.Error
+                    errorHandle(it.message.toString(), MovieType.POPULAR)
                 }
             )
         }
@@ -134,18 +133,15 @@ class MovieViewModel:  ViewModel() {
 
         viewModelScope.launch {
             val result = movieRepository.getMoviesTop(post)
-
+            Log.e("TAG", "getMoviesTop: $result" )
             result.fold(
                 onSuccess = {
-                    _moviesTop.value = it
+//                    it?.let { response -> persistMovieData(response.results)  }
+                    _moviesTop.value = it?.results
                     _appState.value = DataState.Success
                 },
                 onFailure = {
-                    it.message?.let { e ->
-                        Log.e("Error", e)
-                        _error.value = e
-                    }
-                    _appState.value = DataState.Error
+                    errorHandle(it.message.toString(), MovieType.TOP)
                 }
             )
         }
@@ -154,18 +150,47 @@ class MovieViewModel:  ViewModel() {
     fun onMovieSelected(position: Int, movieType: MovieType){
         _moviesDetail.postValue(
             when(movieType){
-                MovieType.PLAYING -> _moviesPlaying.value?.results?.get(position)
-                MovieType.POPULAR -> _moviesPopular.value?.results?.get(position)
-                MovieType.TOP -> _moviesTop.value?.results?.get(position)
+                MovieType.PLAYING -> _moviesPlaying.value?.get(position)
+                MovieType.POPULAR -> _moviesPopular.value?.get(position)
+                MovieType.TOP -> _moviesTop.value?.get(position)
             }
         )
         _navigationToDetailsLiveData.postValue(Event(Unit))
 
     }
 
-    fun onMovieSelected(movie: Result) {
+    fun onMovieSelected(movie: Movie) {
         _moviesDetail.postValue(movie)
         _navigationToDetailsLiveData.postValue(Event(Unit))
     }
+
+    private suspend fun persistMovieData(movieList: List<Movie>?) {
+        movieList?.let {
+            movieDao.deleteAllResults()
+            movieDao.insertList(movieList)
+        }
+
+    }
+
+    private suspend fun errorHandle(error: String, playing: MovieType){
+        val movieList = loadPersistedMovieData()
+
+        Log.e("TAG", "errorHandle: $movieList")
+        if(movieList.isNullOrEmpty()){
+            _error.value = error
+            _appState.value = DataState.Error
+        } else {
+            Log.e("TAG", "errorHandleIsNotEmpty: $movieList")
+            when(playing){
+                MovieType.PLAYING -> _moviesPlaying.value = movieList
+                MovieType.POPULAR -> _moviesPopular.value = movieList
+                MovieType.TOP -> _moviesTop.value = movieList
+            }
+            _appState.value = DataState.Success
+        }
+
+    }
+
+    private suspend fun loadPersistedMovieData() = movieDao.getAllResults()
 
 }

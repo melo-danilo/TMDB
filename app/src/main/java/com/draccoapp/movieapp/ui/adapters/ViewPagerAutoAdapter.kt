@@ -4,14 +4,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.draccoapp.movieapp.api.model.response.movies.Result
+import com.draccoapp.movieapp.api.model.response.movies.Movie
 import com.draccoapp.movieapp.ui.fragments.DefaultViewPagerFragment
 
 class ViewPagerAutoAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
-    private var items: List<Result> = emptyList()
+    private var items: List<Movie> = emptyList()
 
-    fun setItems(newItems: List<Result>) {
+    fun setItems(newItems: List<Movie>) {
         items = newItems
         notifyItemRangeInserted(0, items.size)
     }

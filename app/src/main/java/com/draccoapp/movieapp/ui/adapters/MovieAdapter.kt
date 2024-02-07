@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.draccoapp.movieapp.api.model.response.movies.Result
+import coil.request.CachePolicy
+import com.draccoapp.movieapp.R
+import com.draccoapp.movieapp.api.model.response.movies.Movie
 import com.draccoapp.movieapp.api.model.type.MovieType
 import com.draccoapp.movieapp.databinding.ItemMovieBinding
 import com.draccoapp.movieapp.utils.Constants
@@ -17,23 +19,23 @@ class MovieAdapter(
     private val type: MovieType
 ): RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
 
-    private var movieList: AsyncListDiffer<Result> = AsyncListDiffer(this, DiffCallBack)
+    private var movieList: AsyncListDiffer<Movie> = AsyncListDiffer(this, DiffCallBack)
 
-    fun updateList(list: List<Result>){
+    fun updateList(list: List<Movie>){
         movieList.submitList(list)
     }
 
-    object DiffCallBack : DiffUtil.ItemCallback<Result>() {
+    object DiffCallBack : DiffUtil.ItemCallback<Movie>() {
         override fun areItemsTheSame(
-            oldItem: Result,
-            newItem: Result
+            oldItem: Movie,
+            newItem: Movie
         ): Boolean {
             return oldItem == newItem
         }
 
         override fun areContentsTheSame(
-            oldItem: Result,
-            newItem: Result
+            oldItem: Movie,
+            newItem: Movie
         ): Boolean {
             return oldItem == newItem
         }
@@ -43,9 +45,12 @@ class MovieAdapter(
         private val binding: ItemMovieBinding
     ): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(movie: Result){
+        fun bind(movie: Movie){
             Log.e("TAG", "bind: ${Constants.POSTER_URL + movie.posterPath}" )
-            binding.imageMovie.load(Constants.POSTER_URL + movie.posterPath)
+            binding.imageMovie.load(Constants.POSTER_URL + movie.posterPath) {
+                diskCachePolicy(CachePolicy.ENABLED)
+                error(R.drawable.ic_image_not)
+            }
             binding.textTitle.text = movie.title
 
             binding.root.setOnClickListener {

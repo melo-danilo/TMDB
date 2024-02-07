@@ -6,31 +6,31 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.draccoapp.movieapp.api.model.response.movies.Result
+import com.draccoapp.movieapp.api.model.response.movies.Movie
 import com.draccoapp.movieapp.databinding.ViewPagerItemMovieBinding
 import com.draccoapp.movieapp.utils.Constants
 
 class TopAdapter(
-    private val onClick: (Result) -> Unit
+    private val onClick: (Movie) -> Unit
 ): RecyclerView.Adapter<TopAdapter.ViewHolder>() {
 
-    private var movieList: AsyncListDiffer<Result> = AsyncListDiffer(this, DiffCallBack)
+    private var movieList: AsyncListDiffer<Movie> = AsyncListDiffer(this, DiffCallBack)
 
-    fun updateList(list: List<Result>){
+    fun updateList(list: List<Movie>){
         movieList.submitList(list)
     }
 
-    object DiffCallBack : DiffUtil.ItemCallback<Result>() {
+    object DiffCallBack : DiffUtil.ItemCallback<Movie>() {
         override fun areItemsTheSame(
-            oldItem: Result,
-            newItem: Result
+            oldItem: Movie,
+            newItem: Movie
         ): Boolean {
             return oldItem == newItem
         }
 
         override fun areContentsTheSame(
-            oldItem: Result,
-            newItem: Result
+            oldItem: Movie,
+            newItem: Movie
         ): Boolean {
             return oldItem == newItem
         }
@@ -40,7 +40,7 @@ class TopAdapter(
         private val binding: ViewPagerItemMovieBinding
     ): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(movie: Result){
+        fun bind(movie: Movie){
             binding.imagePoster.load(Constants.POSTER_URL_VIEW + movie.posterPath)
         }
     }
