@@ -47,6 +47,7 @@ lifecycleLivedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-k
 lifecycleRuntime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 kotlinxCoroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 koinAndroid = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
+koinGraph = { group = "io.insert-koin", name = "koin-androidx-navigation", version.ref = "koin" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 rxjava2Adapter = { group = "com.squareup.retrofit2", name = "adapter-rxjava2", version.ref = "rxjava2Adapter" }

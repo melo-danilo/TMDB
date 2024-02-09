@@ -15,7 +15,8 @@ import kotlin.contracts.contract
     exportSchema = false
 )
 abstract class MovieDataBase : RoomDatabase() {
-    abstract fun movieDao(movieDataBase: MovieDataBase): MovieDao
+
+    abstract val movieDao: MovieDao
 
     companion object {
         @Volatile

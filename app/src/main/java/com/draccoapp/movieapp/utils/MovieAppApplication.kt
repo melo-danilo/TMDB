@@ -11,17 +11,11 @@ class MovieAppApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
-        instance = applicationContext
+
         startKoin{
             androidContext(this@MovieAppApplication)
             modules(listModules)
         }
-    }
-
-    companion object {
-        @SuppressLint("StaticFieldLeak")
-        var instance: Context? = null
-            private set
     }
 
 }

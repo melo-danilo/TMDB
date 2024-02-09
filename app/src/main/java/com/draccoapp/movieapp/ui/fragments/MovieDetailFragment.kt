@@ -6,12 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.navGraphViewModels
 import coil.load
 import com.draccoapp.movieapp.R
 import com.draccoapp.movieapp.databinding.FragmentMovieDetailBinding
 import com.draccoapp.movieapp.utils.Constants
 import com.draccoapp.movieapp.viewModel.movies.MovieViewModel
+import org.koin.androidx.navigation.koinNavGraphViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class MovieDetailFragment : Fragment() {
@@ -19,8 +22,7 @@ class MovieDetailFragment : Fragment() {
     private var _binding: FragmentMovieDetailBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by navGraphViewModels<MovieViewModel>(R.id.nav_main){ defaultViewModelProviderFactory }
-
+    private val viewModel by koinNavGraphViewModel<MovieViewModel>(R.id.nav_main)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

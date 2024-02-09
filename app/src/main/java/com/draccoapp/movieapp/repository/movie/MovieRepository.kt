@@ -5,7 +5,6 @@ import com.draccoapp.movieapp.api.model.request.MovieRequest
 import com.draccoapp.movieapp.api.model.response.categories.CategoriesResponse
 import com.draccoapp.movieapp.api.model.response.movies.Movie
 import com.draccoapp.movieapp.api.model.response.movies.MovieResponse
-import com.draccoapp.movieapp.api.request.ApiRequest
 import com.draccoapp.movieapp.api.service.movie.MovieService
 import com.draccoapp.movieapp.utils.ResponseParser
 import kotlinx.coroutines.CoroutineDispatcher
@@ -14,15 +13,14 @@ import kotlinx.coroutines.withContext
 import java.lang.Exception
 
 class MovieRepository(
-    private val dispatcher: CoroutineDispatcher = Dispatchers.Default
+    private val service: MovieService,
+    private val dispatcher: CoroutineDispatcher
 ) {
-
-    private val movieService = ApiRequest().getService(MovieService::class.java)
 
     suspend fun getCategories(language: String): Result<CategoriesResponse?> =
         withContext(dispatcher){
             try {
-                val response = movieService.getCategories(
+                val response = service.getCategories(
                     language = language
                 )
                 when {
@@ -43,7 +41,7 @@ class MovieRepository(
     suspend fun getMoviesPlaying(post: MovieRequest): Result<MovieResponse?> =
         withContext(dispatcher){
             try {
-                val response = movieService.getMoviesPlaying(
+                val response = service.getMoviesPlaying(
                     airDateGte = post.airDateGte,
                     airDateLte = post.airDateLte,
                     certification = post.certification,
@@ -95,7 +93,7 @@ class MovieRepository(
     suspend fun getMoviesPopular(post: MovieRequest): Result<MovieResponse?> =
         withContext(dispatcher){
             try {
-                val response = movieService.getMoviesPopular(
+                val response = service.getMoviesPopular(
                     airDateGte = post.airDateGte,
                     airDateLte = post.airDateLte,
                     certification = post.certification,
@@ -147,7 +145,7 @@ class MovieRepository(
     suspend fun getMoviesTop(post: MovieRequest): Result<MovieResponse?> =
         withContext(dispatcher){
             try {
-                val response = movieService.getMoviesTop(
+                val response = service.getMoviesTop(
                     airDateGte = post.airDateGte,
                     airDateLte = post.airDateLte,
                     certification = post.certification,

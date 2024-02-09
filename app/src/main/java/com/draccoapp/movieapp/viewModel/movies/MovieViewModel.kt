@@ -1,10 +1,9 @@
 package com.draccoapp.movieapp.viewModel.movies
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.draccoapp.movieapp.api.model.event.Event
 import com.draccoapp.movieapp.api.model.request.MovieRequest
@@ -12,16 +11,14 @@ import com.draccoapp.movieapp.api.model.response.categories.CategoriesResponse
 import com.draccoapp.movieapp.api.model.response.movies.Movie
 import com.draccoapp.movieapp.api.model.type.DataState
 import com.draccoapp.movieapp.api.model.type.MovieType
-import com.draccoapp.movieapp.database.MovieDataBase
+import com.draccoapp.movieapp.dao.MovieDao
 import com.draccoapp.movieapp.repository.movie.MovieRepository
 import kotlinx.coroutines.launch
 
-class MovieViewModel(application: Application):  AndroidViewModel(application) {
-
-    private val resultDataBase = MovieDataBase.getDatabase(application)
-    private val movieDao = resultDataBase.movieDao(resultDataBase)
-
-    private val movieRepository = MovieRepository()
+class MovieViewModel(
+    private val repository: MovieRepository,
+    private val movieDao: MovieDao
+):  ViewModel() {
 
     val error: LiveData<String>
         get() = _error
@@ -71,7 +68,7 @@ class MovieViewModel(application: Application):  AndroidViewModel(application) {
     fun getCategories(language: String = "en"){
 
         viewModelScope.launch {
-            val result = movieRepository.getCategories(language)
+            val result = repository.getCategories(language)
 
             result.fold(
                 onSuccess = {
@@ -94,7 +91,7 @@ class MovieViewModel(application: Application):  AndroidViewModel(application) {
 
         viewModelScope.launch {
 
-            val result = movieRepository.getMoviesPlaying(post)
+            val result = repository.getMoviesPlaying(post)
             Log.e("TAG", "getMoviesPlaying: $result" )
             result.fold(
                 onSuccess = {
@@ -113,7 +110,7 @@ class MovieViewModel(application: Application):  AndroidViewModel(application) {
         _appState.postValue(DataState.Loading)
 
         viewModelScope.launch {
-            val result = movieRepository.getMoviesPopular(post)
+            val result = repository.getMoviesPopular(post)
             Log.e("TAG", "getMoviesPopular: $result")
             result.fold(
                 onSuccess = {
@@ -132,7 +129,7 @@ class MovieViewModel(application: Application):  AndroidViewModel(application) {
         _appState.postValue(DataState.Loading)
 
         viewModelScope.launch {
-            val result = movieRepository.getMoviesTop(post)
+            val result = repository.getMoviesTop(post)
             Log.e("TAG", "getMoviesTop: $result" )
             result.fold(
                 onSuccess = {
@@ -166,7 +163,7 @@ class MovieViewModel(application: Application):  AndroidViewModel(application) {
 
     private suspend fun persistMovieData(movieList: List<Movie>?) {
         movieList?.let {
-            movieDao.deleteAllResults()
+            movieDao.deleteAll()
             movieDao.insertList(movieList)
         }
 
@@ -191,6 +188,6 @@ class MovieViewModel(application: Application):  AndroidViewModel(application) {
 
     }
 
-    private suspend fun loadPersistedMovieData() = movieDao.getAllResults()
+    private suspend fun loadPersistedMovieData() = movieDao.getAll()
 
 }

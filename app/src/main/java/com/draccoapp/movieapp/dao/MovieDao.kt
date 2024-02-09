@@ -6,17 +6,15 @@ import com.draccoapp.movieapp.api.model.response.movies.Movie
 import com.draccoapp.movieapp.database.MovieDataBase
 
 @Dao
-abstract class MovieDao(
-    private val movieDataBase: MovieDataBase
-): BaseDao<Movie> {
+abstract class MovieDao: BaseDao<Movie> {
 
     @Query("SELECT * FROM movie")
-    abstract suspend fun getAllResults(): List<Movie>?
+    abstract suspend fun getAll(): List<Movie>?
 
     @Query("SELECT * FROM movie where id=:id")
-    abstract suspend fun getResult(id: Int): Movie?
+    abstract suspend fun getById(id: Int): Movie?
 
     @Query("DELETE FROM movie")
-    abstract suspend fun deleteAllResults()
+    abstract suspend fun deleteAll()
 
 }

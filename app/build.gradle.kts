@@ -65,6 +65,8 @@ dependencies {
     implementation(libs.lifecycleRuntime)
     implementation(libs.kotlinxCoroutines)
 
+    implementation(libs.koinGraph)
+
     implementation(libs.roomRuntime)
     implementation(libs.roomKtx)
     ksp(libs.roomCompilerKsp)
