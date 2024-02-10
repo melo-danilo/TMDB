@@ -78,4 +78,4 @@ val viewModelModule = module{
 }
 
 
-val listModules = listOf(netWorkModule, databaseModule, serviceModule, useCase, repositoryModule, viewModelModule)
+val listModules = listOf(netWorkModule, databaseModule, serviceModule, repositoryModule, viewModelModule)
