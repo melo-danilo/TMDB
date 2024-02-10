@@ -52,8 +52,10 @@ dependencies {
     implementation(libs.constraintlayout)
     testImplementation(libs.junit)
     testImplementation(libs.truth)
-    testImplementation(libs.mockkCommom)
-    testImplementation(libs.mockk)
+    testImplementation(libs.mockk.mockk)
+    androidTestImplementation(libs.kotlinxCoroutinesTest)
+//    androidTestImplementation(libs.mockkAndroid)
+//    androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
