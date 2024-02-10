@@ -76,9 +76,6 @@ val viewModelModule = module{
         MovieViewModel(get(), get())
     }
 }
-val useCase = module {
-
-}
 
 
 val listModules = listOf(netWorkModule, databaseModule, serviceModule, useCase, repositoryModule, viewModelModule)
